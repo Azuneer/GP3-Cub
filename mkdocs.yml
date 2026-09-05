@@ -5,6 +5,8 @@ site_author: Ewen GADONNAUD et Rayan BOINA-BOINA
 theme:
   name: material
   language: fr
+  logo: assets/logo_cub.png
+  favicon: assets/logo_cub.png
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -47,12 +49,36 @@ theme:
 
 nav:
   - Accueil: index.md
+  - Documentation:
+      - documentation/index.md
+      - Adminsys:
+          - documentation/adminsys/linux.md
+          - documentation/adminsys/windows.md
+      - Cybersécurité:
+          - documentation/cybersecurite/stormshield.md
+      - DevOps:
+          - documentation/devops/versioning.md
+      - Réseau:
+          - documentation/reseau/cisco.md
+      - Services:
+          - documentation/services/dns.md
+          - documentation/services/services-web.md
+          - documentation/services/supervision.md
   - Situations:
       - situations/index.md
-      - "Situation 1 : Préparation de la maquette et premiers paramétrages du serveur Windows 2025": situations/Situation1.md
+      - Bloc 2 - Administration Système:
+          - situations/bloc2-admin-sys/situation1-windows.md
+      - Bloc 2 - Exploitation des services:
+          - situations/bloc2-services/activite0.md
+      - Bloc 2 - Administration et supervision des réseaux:
+          - situations/bloc2-reseaux/feuille-de-route.md
+      - Bloc 3 - Cybersécurité:
+          - situations/bloc3-cyber/situation1.md
   - Situation professionnelles:
       - sp/index.md
-  - Ressources: ressources/index.md
+  - Ressources:
+      - ressources/index.md
+      - Schémas: ressources/schemas.md
 
 plugins:
   - search:
