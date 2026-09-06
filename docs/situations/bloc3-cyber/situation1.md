@@ -103,3 +103,12 @@ Le découpage des trois VLANs ci-dessus consomme `128 + 64 + 16 = 208` adresses 
 | 192.36.253.0   | 255.255.255.0   | 192.36.253.30  | 192.36.253.30         | C    |
 | 192.168.3.0    | 255.255.255.0   | 192.168.33.253 | 192.168.33.254        | S    |
 | 0.0.0.0        | 0.0.0.0         | 192.36.253.254 | 192.36.253.30         | S*   |
+
+---
+
+## Documents associés
+
+Les schémas **logique**, **physique** et de **câblage** de l'infrastructure ainsi que la maquette **Cisco Packet Tracer** sont disponibles dans l'onglet [Ressources](../../ressources/index.md) du site :
+
+- [Schémas](../../ressources/schemas.md)
+- [Maquette Packet Tracer](../../assets/schemas/cub_logique.pkt)

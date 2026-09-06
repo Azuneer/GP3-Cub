@@ -12,6 +12,14 @@ Base documentaire commune et transversale de l'infrastructure CUB : schémas, pl
 
     [:octicons-arrow-right-24: Voir les schémas](schemas.md)
 
+- :material-folder-network:{ .lg .middle } __Maquette Packet Tracer__
+
+    ---
+
+    Maquette Cisco `.pkt` modélisant l'architecture logique de référence.
+
+    [:octicons-arrow-right-24: Télécharger](../assets/schemas/cub_logique.pkt)
+
 - :material-table:{ .lg .middle } __Table NAT__
 
     ---

@@ -11,6 +11,10 @@ Schémas de l'infrastructure et de la configuration du contexte CUB, au format P
 
 - [Schéma logique GP3 (A3)](../assets/schemas/gp3_schema_logique_A3.drawio.pdf)
 
+## Maquette
+
+- [Maquette Packet Tracer](../assets/schemas/cub_logique.pkt)
+
 ## Tables
 
 - [Table NAT](../assets/schemas/table-nat.pdf)

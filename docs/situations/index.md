@@ -1,4 +1,4 @@
-# Situations
+# Situations & Activités
 
 Productions concrètes de notre groupe pour chaque situation professionnelle du référentiel BTS SIO, organisées par bloc.
 
@@ -20,7 +20,8 @@ Productions concrètes de notre groupe pour chaque situation professionnelle du 
 
     ---
 
-    [Feuille de route des chapitres](bloc2-reseaux/feuille-de-route.md)
+    [Feuille de route des chapitres](bloc2-reseaux/feuille-de-route.md)  
+    [Activité 0 : Mise en place de l'infrastructure réseau des agences](bloc2-reseaux/activite0.md)
 
 - :material-shield-lock:{ .lg .middle } __Bloc 3 - Cybersécurité__
 
