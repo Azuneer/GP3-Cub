@@ -1,5 +1,7 @@
 # Situation 1 : Préparation de la maquette et premiers paramétrages du serveur Windows 2025
 
+![Logo CUB](../../assets/logo_cub.png){ width="150" }
+
 > :bust_in_silhouette: **Fiche rédigée par** : GADONNAUD Ewen  
 > :mortar_board: **Formation** : BTS SIO 2ème année - Option SISR  
 > :school: **Établissement** : Lycée Paul-Louis Courier, Tours  
