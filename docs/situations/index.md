@@ -27,6 +27,7 @@ Productions concrètes de notre groupe pour chaque situation professionnelle du 
 
     ---
 
-    [Situation 1 : Phase d'analyse préalable](bloc3-cyber/situation1.md)
+    [Situation 1 : Phase d'analyse préalable](bloc3-cyber/situation1.md)  
+    [Situation 2 : Premiers paramétrages d'un pare-feu sur un site de l'entreprise](bloc3-cyber/situation2.md)
 
 </div>
