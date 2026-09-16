@@ -1,0 +1,114 @@
+<mxfile host="Electron" agent="Claude">
+  <diagram id="physique-gp3" name="Schema physique - GP3">
+    <mxGraphModel dx="1118" dy="832" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;" value="Schema physique - GP3&#xa;CUB" vertex="1">
+          <mxGeometry height="39" width="260" x="708" y="73" as="geometry" />
+        </mxCell>
+        <mxCell id="cart" parent="1" style="text;html=1;align=right;verticalAlign=middle;fontSize=7;" value="Derniere edition par Ewen le 05/09/2026." vertex="1">
+          <mxGeometry height="20" width="260" x="1220" y="73" as="geometry" />
+        </mxCell>
+        <mxCell id="legbox" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=9;align=left;spacingLeft=10;spacingTop=6;" value="LEGENDE" vertex="1">
+          <mxGeometry height="169" width="390" x="136" y="238" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=none;startArrow=none;fontSize=8;" value="Flux reseau">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="156" y="270" as="sourcePoint" />
+            <mxPoint x="240" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg2" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=none;startArrow=none;dashed=1;dashPattern=6 3 1 3;fontSize=8;" value="Communications internes machine">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="156" y="296" as="sourcePoint" />
+            <mxPoint x="240" y="296" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry height="20" width="39" x="156" y="322" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3t" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=8;" value="Machines virtuelles dans le cluster PVE" vertex="1">
+          <mxGeometry height="20" width="228" x="208" y="322" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry height="20" width="39" x="156" y="348" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4t" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=8;" value="Machines dans un VLAN" vertex="1">
+          <mxGeometry height="20" width="228" x="208" y="348" as="geometry" />
+        </mxCell>
+        <mxCell id="panneau" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5d5d5;strokeColor=#666666;fontStyle=1;fontSize=8;" value="PANNEAU DE BRASSAGE GP3" vertex="1">
+          <mxGeometry height="32" width="422" x="598" y="251" as="geometry" />
+        </mxCell>
+        <mxCell id="utm" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3864;fontColor=#ffffff;fontStyle=1;fontSize=9;" value="SNS-GP3&#xa;(UTM)" vertex="1">
+          <mxGeometry height="72" width="143" x="598" y="498" as="geometry" />
+        </mxCell>
+        <mxCell id="e_panneau_utm" edge="1" parent="1" source="panneau" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=7;" target="utm" value="WAN CUB">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l2top" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;fontSize=8;fontStyle=1;" value="Layer 3" vertex="1">
+          <mxGeometry height="58" width="143" x="792" y="374" as="geometry" />
+        </mxCell>
+        <mxCell id="e_panneau_l2top" edge="1" parent="1" source="panneau" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=7;" target="l2top" value="TRUNK (VLAN 53, 83, ...)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l2top_utm" edge="1" parent="1" source="l2top" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;dashed=1;fontSize=7;" target="utm" value="VLAN 83 DMZ Externe">
+          <mxGeometry relative="1" x="-0.5218" y="17" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="679.96" y="403" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;fontSize=8;fontStyle=1;" value="Layer 3" vertex="1">
+          <mxGeometry height="58" width="143" x="792" y="634" as="geometry" />
+        </mxCell>
+        <mxCell id="e_utm_l3" edge="1" parent="1" source="utm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;dashed=1;fontSize=7;" target="l3" value="LAN">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l2top_l3" edge="1" parent="1" source="l2top" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=7;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" target="l3" value="VLAN 53 PRODUCTION">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vlan20box" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=8;spacingTop=8;" value="VLAN 20 ADMINISTRATION" vertex="1">
+          <mxGeometry height="150" width="422" x="162" y="654" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l3_vlan20" edge="1" parent="1" source="l2bot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=7;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" target="vlan20box" value="VLAN 20 ADMINISTRATION">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l2bot" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;fontSize=8;fontStyle=1;" value="Layer 2" vertex="1">
+          <mxGeometry height="58" width="143" x="792" y="804" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l3_l2bot" edge="1" parent="1" source="l3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;dashed=1;fontSize=7;" target="l2bot" value="TRUNK (VLAN 10, 20)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vlan10box" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=8;spacingTop=8;" value="VLAN 10 CLIENT" vertex="1">
+          <mxGeometry height="150" width="422" x="162" y="842" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l2bot_vlan10" edge="1" parent="1" source="l2bot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=7;" target="vlan10box" value="VLAN 10 CLIENTS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="salleserveur" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=10;spacingTop=8;" value="SALLE SERVEUR" vertex="1">
+          <mxGeometry height="442" width="422" x="1098" y="438" as="geometry" />
+        </mxCell>
+        <mxCell id="panneau2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5d5d5;strokeColor=#666666;fontStyle=1;fontSize=8;" value="PANNEAU DE BRASSAGE SALLE SERVEUR" vertex="1">
+          <mxGeometry height="32" width="338" x="1130" y="484" as="geometry" />
+        </mxCell>
+        <mxCell id="proxmox" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;fontSize=8;fontStyle=1;" value="Cluster Proxmox" vertex="1">
+          <mxGeometry height="110" width="117" x="1260" y="594" as="geometry" />
+        </mxCell>
+        <mxCell id="e_panneau2_proxmox" edge="1" parent="1" source="panneau2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=7;" target="proxmox" value="TRUNK (VLAN 53, 83, ...)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vmbox" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fontStyle=1;fontSize=8;spacingTop=8;" value="VM Cluster Proxmox" vertex="1">
+          <mxGeometry height="110" width="338" x="1130" y="737" as="geometry" />
+        </mxCell>
+        <mxCell id="vm1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=8;" value="VM&#xa;(Windows)" vertex="1">
+          <mxGeometry height="58" width="98" x="1162" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="vm2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=8;" value="VM&#xa;(Linux)" vertex="1">
+          <mxGeometry height="58" width="98" x="1325" y="770" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
