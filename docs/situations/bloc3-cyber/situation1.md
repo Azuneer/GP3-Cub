@@ -1,11 +1,11 @@
 # Situation 1 : Phase d'analyse préalable
 
+![Logo CUB](../../assets/logo_cub.png){ width="150" }
+
 > :bust_in_silhouette: **Fiche rédigée par** : GADONNAUD Ewen  
 > :mortar_board: **Formation** : BTS SIO 2ème année - Option SISR  
 > :school: **Établissement** : Lycée Paul-Louis Courier, Tours  
 > :calendar: **Date** : Septembre 2026
-
-![Schéma du contexte CUB](../../assets/situations/bloc3-cyber/schema-reseau.png)
 
 ---
 
@@ -36,7 +36,7 @@ Les deux arguments majeurs en faveur d'un boîtier UTM Stormshield comparé à d
 
 Prenons premièrement le schéma du réseau du contexte CUB :
 
-![Réseau CUB initial](../../assets/situations/bloc3-cyber/reseau-cub-unique.png)
+![3. Dans le schéma proposé dans le contexte CUB, expliquer pourquoi la présence d'un réseau local au sein des agences pose des problèmes de sécurité. Puis proposer une solution qui prenne en compte les différents services recensés dans le document 1.1 du dossier documentaire](../../assets/situations/bloc2-reseaux/reseau-cub-unique.png)
 
 Quand on compare le schéma avec le tableau présent dans le document 1.1, on se rend compte que plusieurs pôles d'activités sont réunis dans un seul et même réseau local (un même VLAN). Cette pratique est déconseillée et dangereuse car elle agit comme point de convergence si un attaquant arrive à accéder au réseau local de l'entreprise.
 
@@ -44,7 +44,7 @@ Typiquement, un virus informatique pourrait réussir à se répandre dans ce mê
 
 Une solution serait alors de séparer les différents réseaux locaux en plusieurs sous-réseaux, en gardant en tête au minimum le double de la capacité d'hôtes existants par sous-réseaux lors de la séparation en plusieurs sous-réseaux.
 
-## 4. Réaliser un schéma réseau logique représentant votre nouvelle proposition. Ce schéma ne concerne uniquement que le site dont vous avez la charge
+## 4. Réaliser un schéma réseau logique représentant la nouvelle proposition. Ce schéma concerne uniquement le site étudié
 
 Premièrement, il faut établir un nouveau plan d'adressage en adéquation avec les nouveaux changements évoqués à la question précédente :
 
@@ -64,12 +64,13 @@ Cette approche évite le gaspillage d'adresses IP inhérent à un découpage en 
 | **PRODUCTION** (53) | 192.168.3.0/25   | 255.255.255.128 | 192.168.3.1 – 192.168.3.126   | 192.168.3.126 | 192.168.3.127        | 126               | ~63                             |
 | **CLIENTS** (10)    | 192.168.3.128/26 | 255.255.255.192 | 192.168.3.129 – 192.168.3.190 | 192.168.3.190 | 192.168.3.191        | 62                | ~31                             |
 | **ADMIN** (20)      | 192.168.3.192/28 | 255.255.255.240 | 192.168.3.193 – 192.168.3.206 | 192.168.3.206 | 192.168.3.207        | 14                | ~7                              |
+| **BASTION** (51)    | 192.168.3.208/29 | 255.255.255.248 | 192.168.3.209 – 192.168.3.214 | 192.168.3.214 | 192.168.3.215        | 6                 | ~3                              |
 
-> **Convention retenue** : la passerelle est placée sur la dernière adresse utilisable de chaque sous-réseau (`.126`, `.190`, `.206`), plutôt que sur la première.
+> **Convention retenue** : la passerelle est placée sur la dernière adresse utilisable de chaque sous-réseau (`.126`, `.190`, `.206`, `.214`), plutôt que sur la première.
 
 ### Plage restante
 
-Le découpage des trois VLANs ci-dessus consomme `128 + 64 + 16 = 208` adresses sur les `256` disponibles dans le `/24` initial. La plage restante, `192.168.3.208` à `192.168.3.255` (soit **48 adresses**), n'est pas allouée et constitue une **réserve pour une évolution future** (ajout d'un nouveau pôle, extension supplémentaire d'un VLAN existant, etc.). Elle peut être subdivisée ultérieurement, par exemple en un `192.168.3.208/28` (16 adresses) et un `192.168.3.224/27` (32 adresses).
+Le découpage des quatre VLANs ci-dessus consomme `128 + 64 + 16 + 8 = 216` adresses sur les `256` disponibles dans le `/24` initial. La plage restante, `192.168.3.216` à `192.168.3.255` (soit **40 adresses**), n'est pas allouée et constitue une **réserve pour une évolution future** (ajout d'un nouveau pôle, extension supplémentaire d'un VLAN existant, etc.). Elle peut être subdivisée ultérieurement, par exemple en un `192.168.3.224/27` (32 adresses) et un `192.168.3.216/30` (2 adresses).
 
 ---
 
@@ -91,6 +92,7 @@ Le découpage des trois VLANs ci-dessus consomme `128 + 64 + 16 = 208` adresses 
 | 192.168.3.0    | 255.255.255.128 | 192.168.3.126  | 192.168.3.126         | C    |
 | 192.168.3.128  | 255.255.255.192 | 192.168.3.190  | 192.168.3.190         | C    |
 | 192.168.3.192  | 255.255.255.240 | 192.168.3.206  | 192.168.3.206         | C    |
+| 192.168.3.208  | 255.255.255.248 | 192.168.3.214  | 192.168.3.214         | C    |
 | 192.168.33.248 | 255.255.255.248 | 192.168.33.253 | 192.168.33.253        | C    |
 | 0.0.0.0        | 0.0.0.0         | 192.168.33.254 | 192.168.33.253        | S*   |
 
@@ -108,7 +110,15 @@ Le découpage des trois VLANs ci-dessus consomme `128 + 64 + 16 = 208` adresses 
 
 ## Documents associés
 
-Les schémas **logique**, **physique** et de **câblage** de l'infrastructure ainsi que la maquette **Cisco Packet Tracer** sont disponibles dans l'onglet [Ressources](../../ressources/index.md) du site :
+Les schémas et la maquette **Cisco Packet Tracer** de l'infrastructure sont disponibles sur le site MkDocs du contexte : 
 
-- [Schémas](../../ressources/schemas.md)
-- [Maquette Packet Tracer](../../assets/schemas/cub_logique.pkt)
+https://azuneer.github.io/GP3-Cub/ressources/schemas/
+
+## Documentation technique associée
+
+- [IPv4, CIDR et calcul VLSM](../../documentation/reseau/adressage-vlsm.md)
+- [VLAN, trunks et routage inter-VLAN](../../documentation/reseau/vlan-routage.md)
+- [Cisco IOS : VLAN, SVI et routes](../../documentation/reseau/cisco.md)
+- [NAT, PAT et publication de services](../../documentation/reseau/nat.md)
+- [Draw.io, plans de câblage et Packet Tracer](../../documentation/reseau/schemas-maquette.md)
+- [Stormshield : UTM, zones et politiques de sécurité](../../documentation/cybersecurite/stormshield.md)

@@ -1,64 +1,51 @@
-# Versioning
+# Git et GitHub : versions, branches et collaboration
 
-Documentation générique des pratiques **DevOps** et de **versioning** utilisées dans le contexte CUB.
+## Rôle et fonctionnement
 
-## Pourquoi versionner ?
+Git conserve l'historique local d'un projet. GitHub héberge des dépôts et fournit des outils de collaboration. Le répertoire de travail contient les fichiers modifiés ; l'index prépare le prochain commit ; le dépôt conserve les versions enregistrées.
 
-Le versioning permet de :
-
-- conserver l'**historique** des modifications ;
-- **revenir** à une version antérieure en cas de problème ;
-- **collaborer** à plusieurs sur les mêmes fichiers ;
-- **documenter** par des messages de commit explicites.
-
-## Git — commandes essentielles
+## Cycle de travail
 
 ```bash
-# Initialiser un dépôt
-git init
-
-# Préparer les modifications
-git add .
-
-# Créer un commit descriptif
-git commit -m "docs: ajout de la procédure de configuration DNS"
-
-# Pousser sur le dépôt distant
-git push origin main
-
-# Récupérer les dernières modifications
-git pull
+git status
+git diff
+git switch -c documentation/dns
+git add docs/documentation/services/dns.md
+git diff --staged
+git commit -m "Documenter le fonctionnement du DNS"
 ```
 
-## Stratégie de branche
+L'identité se configure avec `git config user.name` et `git config user.email`, au niveau du dépôt ou avec `--global`. Un commit reste local jusqu'à sa publication.
 
-| Branche | Rôle |
-|---------|------|
-| `main` | Version stable / production |
-| `feature/*` | Développement d'une fonctionnalité |
+## Dépôt distant et Pull Request
 
 ```bash
-# Créer une branche de fonctionnalité
-git checkout -b feature/maquette-reseau
-
-# Fusionner dans main
-git checkout main
-git merge feature/maquette-reseau
+git remote -v
+git fetch origin
+git log --oneline --graph --all
+git push -u origin documentation/dns
 ```
 
-## Versionner la configuration : etckeeper
+Une Pull Request permet de comparer une branche, discuter les changements et les fusionner après validation. `fetch` récupère l'historique distant sans fusionner ; `pull` récupère puis intègre selon la configuration. Une divergence n'entraîne pas systématiquement un conflit : celui-ci dépend des modifications concurrentes.
 
-**etckeeper** versionne le contenu de `/etc` sur les serveurs Debian, créant un commit à chaque modification de configuration :
+## Annulation et conflits
 
-```bash
-sudo apt install etckeeper
-sudo git -C /etc log --oneline
-```
+`git restore --staged fichier` retire un fichier de l'index sans effacer son contenu de travail. `git restore fichier` rétablit le fichier depuis l'index et peut faire perdre les modifications non enregistrées : examiner `git diff` avant utilisation.
 
-## Intégration continue (GitHub Actions)
+En cas de conflit, comprendre les deux versions, éditer le résultat, supprimer les marqueurs, tester puis enregistrer la résolution. `git revert` crée un commit inverse et convient souvent mieux qu'une réécriture de l'historique partagé.
 
-Le site de documentation CUB est déployé automatiquement via **GitHub Actions** : à chaque push sur `main`, la documentation est compilée (MkDocs) puis publiée sur GitHub Pages.
+## Vérification
 
-## Voir aussi
+Avant publication, vérifier le statut, les différences préparées, la branche et le dépôt distant. Ne jamais versionner de secret, même dans un fichier supprimé au commit suivant : il resterait dans l'historique.
 
-- [Linux](../adminsys/linux.md)
+Le dépôt utilisé dans la situation est `Azuneer/CUB-Scripts-Administration`. Les commandes ci-dessus sont des exemples, pas une publication automatique du travail.
+
+## Situations associées
+
+- [Situation 3 : Gestion des versions avec Git et Github](../../situations/bloc2-admin-sys/situation3-git.md)
+
+## Sources officielles
+
+- [Git — branches et fusion](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)
+- [Git — restore](https://git-scm.com/docs/git-restore)
+- [GitHub — Pull Requests](https://docs.github.com/en/pull-requests/reference/pull-requests)

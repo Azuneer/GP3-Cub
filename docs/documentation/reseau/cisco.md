@@ -1,67 +1,63 @@
-# Cisco
+# Cisco IOS : VLAN, SVI et routes
 
-Documentation générique de la configuration réseau **Cisco** utilisée dans le contexte CUB.
+## Rôle et prérequis
 
-## Équipements
+Les commutateurs Cisco assurent la commutation et, sur les modèles L3, le routage. Les noms d'interfaces et fonctions disponibles dépendent du modèle et de l'image IOS. Relever les ports réels sur le [plan de câblage](../../ressources/schemas.md) avant toute configuration.
 
-| Modèle | Niveau | Rôle |
-|--------|--------|------|
-| Switch niveau 2 | L2 | Accès, segmentation VLAN |
-| Switch niveau 3 | L3 | Cœur de réseau, routage inter-VLAN |
+## Exemple : VLAN Production 53
 
-## VLAN
+Sur un switch L3 compatible, exemple à adapter à un port d'accès libre et à la liaison montante réellement utilisée :
 
-Un **VLAN** isole logiquement le trafic entre groupes de machines sur un même équipement.
-
-```cisco
-! Créer un VLAN
-Switch(config)# vlan 10
-Switch(config-vlan)# name Production
-
-! Affecter un port en accès
-Switch(config)# interface fa0/1
-Switch(config-if)# switchport mode access
-Switch(config-if)# switchport access vlan 10
-
-! Ports en trunk
-Switch(config)# interface gi0/1
-Switch(config-if)# switchport mode trunk
+```text
+configure terminal
+vlan 53
+ name PRODUCTION
+interface GigabitEthernet1/0/1
+ switchport mode access
+ switchport access vlan 53
+interface GigabitEthernet1/0/48
+ switchport mode trunk
+ switchport trunk allowed vlan add 10,20,51,53
+interface Vlan53
+ ip address 192.168.3.126 255.255.255.128
+ no shutdown
+ip routing
+end
 ```
 
-## Routage inter-VLAN (switch niveau 3)
+Cette séquence ne configure pas les SVI des autres VLAN. L'état opérationnel d'une SVI dépend notamment de la présence du VLAN et de ports actifs associés.
 
-```cisco
-! Activer le routage
-Switch(config)# ip routing
+## Route par défaut
 
-! Configurer une interface VLAN (gateway du sous-réseau)
-Switch(config)# interface vlan 10
-Switch(config-if)# ip address 192.168.3.126 255.255.255.128
-Switch(config-if)# no shutdown
+Si la liaison LAN2 est correctement configurée et si `192.168.33.254` est joignable, le prochain saut vers Stormshield peut être défini ainsi :
+
+```text
+configure terminal
+ip route 0.0.0.0 0.0.0.0 192.168.33.254
+end
 ```
 
-## Routage statique
+Il est inutile d'ajouter une route statique vers un réseau déjà directement connecté. Vérifier aussi les routes de retour sur le pare-feu.
 
-```cisco
-Switch(config)# ip route 192.168.33.248 255.255.255.248 192.168.33.254
+## Vérification et sauvegarde
+
+```text
+show vlan brief
+show interfaces trunk
+show ip interface brief
+show ip route
+show access-lists
+copy running-config startup-config
 ```
 
-## Sécurisation de l'accès
+Sauvegarder seulement après validation. Documenter le port modifié, le résultat attendu et le résultat observé. Pour l'administration, privilégier SSH, un compte nominatif et un accès limité au réseau autorisé ; Telnet transmet les échanges sans chiffrement.
 
-```cisco
-! Mot de passe enable
-Switch(config)# enable secret <mot-de-passe>
+## Situations associées
 
-! SSH (à la place de Telnet)
-Switch(config)# ip domain-name local.cubX.fr
-Switch(config)# crypto key generate rsa
-Switch(config)# line vty 0 4
-Switch(config-line)# transport input ssh
-Switch(config-line)# login local
-```
+- [Activité 0 : Mise en place de l'infrastructure réseau des agences de l'entreprise CUB](../../situations/bloc2-reseaux/activite0.md)
+- [Situation 1 : Phase d'analyse préalable](../../situations/bloc3-cyber/situation1.md)
+- [Situation 3 : Routage et NAT](../../situations/bloc3-cyber/situation3.md)
 
-## Voir aussi
+## Sources officielles
 
-- [Stormshield](../cybersecurite/stormshield.md)
-- [DNS](../services/dns.md)
-- [Maquette Packet Tracer](../../ressources/schemas.md)
+- [Cisco — configuration du routage inter-VLAN](https://www.cisco.com/c/en/us/support/docs/lan-switching/inter-vlan-routing/41260-189.html)

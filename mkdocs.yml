@@ -51,19 +51,40 @@ nav:
   - Accueil: index.md
   - Documentation:
       - documentation/index.md
-      - Adminsys:
-          - documentation/adminsys/linux.md
-          - documentation/adminsys/windows.md
+      - Administration système:
+          - "Virtualisation : Proxmox, VirtualBox et VirtIO": documentation/adminsys/virtualisation.md
+          - "Windows Server : préparation, SConfig et Sysprep": documentation/adminsys/windows.md
+          - "PowerShell : commandes, comptes et scripts": documentation/adminsys/powershell.md
+          - "Windows Admin Center, WinRM et administration distante": documentation/adminsys/wac.md
+          - "Debian : réseau, paquets et services systemd": documentation/adminsys/linux.md
+          - "SSH, SCP et RDP": documentation/adminsys/ssh-rdp.md
+          - "Active Directory, DNS et comptes": documentation/adminsys/active-directory.md
+          - "RAID, sauvegardes et continuité": documentation/adminsys/raid-sauvegarde.md
+      - Réseaux:
+          - "IPv4, CIDR et calcul VLSM": documentation/reseau/adressage-vlsm.md
+          - "VLAN, trunks et routage inter-VLAN": documentation/reseau/vlan-routage.md
+          - "Cisco IOS : VLAN, SVI et routes": documentation/reseau/cisco.md
+          - "NAT, PAT et publication de services": documentation/reseau/nat.md
+          - "TCP, UDP, ICMP et diagnostic réseau": documentation/reseau/protocoles-diagnostic.md
+          - "VPN : accès distant et interconnexion de sites": documentation/reseau/vpn.md
+          - "Draw.io, plans de câblage et Packet Tracer": documentation/reseau/schemas-maquette.md
       - Cybersécurité:
-          - documentation/cybersecurite/stormshield.md
-      - DevOps:
-          - documentation/devops/versioning.md
-      - Réseau:
-          - documentation/reseau/cisco.md
-      - Services:
-          - documentation/services/dns.md
-          - documentation/services/services-web.md
-          - documentation/services/supervision.md
+          - "Stormshield : UTM, zones et politiques de sécurité": documentation/cybersecurite/stormshield.md
+          - "Bastion Apache Guacamole : architecture et accès": documentation/cybersecurite/guacamole.md
+          - "Authentification : mots de passe, Bitwarden et TOTP": documentation/cybersecurite/authentification.md
+          - "AppArmor : confinement et diagnostic": documentation/cybersecurite/apparmor.md
+          - "HTTPS, TLS et certificats": documentation/cybersecurite/tls.md
+      - Services et supervision:
+          - "DNS : résolution, autorité et enregistrements": documentation/services/dns.md
+          - "Unbound : résolveur récursif, cache et DNSSEC": documentation/services/unbound.md
+          - "NTP : synchronisation horaire et fuseaux": documentation/services/ntp.md
+          - "Supervision, journaux et rsyslog": documentation/services/supervision.md
+          - "Services Web : Apache, HTTP et publication en DMZ": documentation/services/services-web.md
+          - "FTP, FTPS et SFTP": documentation/services/ftp.md
+      - Git et documentation:
+          - "Git et GitHub : versions, branches et collaboration": documentation/devops/versioning.md
+          - "etckeeper : historique des configurations Linux": documentation/devops/etckeeper.md
+          - "MkDocs Material, Obsidian et GitHub Pages": documentation/devops/mkdocs.md
   - Situations & Activités:
       - situations/index.md
       - Bloc 2 - Administration Système:
@@ -80,9 +101,14 @@ nav:
           - situations/bloc3-cyber/situation1.md
           - situations/bloc3-cyber/situation2.md
           - situations/bloc3-cyber/situation3.md
+          - situations/bloc3-cyber/situation4.md
   - Ressources:
       - ressources/index.md
+      - Toutes les productions: ressources/productions.md
       - Schémas: ressources/schemas.md
+      - "Tables de routage - CUB GP3": ressources/tables-de-routage.md
+      - "Table NAT - CUB GP3": ressources/table-nat.md
+      - "TODO — Structuration du site Cub": ressources/organisation-site.md
 
 plugins:
   - search:
@@ -131,3 +157,6 @@ extra:
 
 extra_css:
   - stylesheets/extra.css
+
+hooks:
+  - hooks/fiche_layout.py

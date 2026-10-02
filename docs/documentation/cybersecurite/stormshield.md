@@ -1,43 +1,39 @@
-# Stormshield
+# Stormshield : UTM, zones et politiques de sécurité
 
-Documentation générique du pare-feu **UTM Stormshield** utilisée dans le contexte CUB pour sécuriser et interconnecter les agences de l'entreprise.
+## Rôle et fonctionnement
 
-## Présentation
+Un pare-feu stateful suit l'état des connexions. Une solution UTM regroupe plusieurs fonctions, comme le filtrage réseau, l'inspection applicative et la prévention d'intrusions. Les fonctions effectivement disponibles dépendent du modèle, de la version et des licences.
 
-Un pare-feu **UTM** (Unified Threat Management) combine plusieurs fonctions de sécurité : pare-feu réseau, antivirus, anti-espion, antispam, prévention/détection d'intrusions, filtrage de contenus et prévention des fuites. Dans le contexte CUB, une solution **Stormshield** a été retenue en raison de :
+Dans CUB, Stormshield sépare les zones réseau et réalise des traductions d'adresses. Le choix d'un produit français ne suffit pas à démontrer une conformité générale : une certification ou qualification porte sur un périmètre et une version précis.
 
-- sa **souveraineté** (entreprise française, filiale d'Airbus Defence and Space, hors de portée du Cloud Act) ;
-- sa **conformité** aux exigences de l'**ANSSI** et des marchés publics français.
+## Mise en œuvre
 
-## Configuration du NAT dynamique (NAPT / masquerading)
+1. Identifier les interfaces WAN, LAN et DMZ à partir du schéma.
+2. Configurer leur adressage et les routes nécessaires.
+3. Créer des objets nommés pour les réseaux, machines et services.
+4. Définir les flux autorisés, puis les règles NAT utiles.
+5. Activer la politique prévue, vérifier les journaux et sauvegarder la configuration.
 
-Le NAT permet aux machines des réseaux internes d'accéder à Internet en traduisant les adresses privées vers une adresse publique.
+Une règle doit préciser sa source, sa destination, le service et son objectif. L'ordre des règles compte. Limiter les droits d'administration à la zone dédiée.
 
-### Principe du PAT
+## Filtrage et NAT
 
-Le **PAT** (Port Address Translation) est un NAT dynamique qui utilise le numéro de port pour multiplexer plusieurs connexions sur une seule adresse IP (jusqu'à **65 536** traductions, port codé sur 16 bits).
+La traduction ne vaut pas autorisation. Une publication en DMZ nécessite un service actif, une règle NAT, le filtrage adapté et un chemin retour cohérent. Restreindre une règle de sortie à son périmètre évite de traduire involontairement des échanges internes.
 
-### Étapes de configuration
+La politique **Pass All** utilisée pendant la maquette facilite un diagnostic initial ; elle ne représente pas la politique finale de sécurité.
 
-1. Ouvrir la **Politique** (ex. Politique 10) → onglet **NAT**
-2. Créer une nouvelle règle de **partage d'adresse source (masquerading)**
-3. **Source originale** : `Network_internals` (tous les réseaux internes protégés)
-4. **Destination originale** : `Internet`
-5. **Interface de sortie** : `out`
-6. **Source traduite** : `Firewall_Out` avec port `ephemeral_fw` (choix aléatoire du port)
-7. **Activer** la règle puis **Appliquer** la politique
+## Vérification et dépannage
 
-!!! warning "Attention"
-    Si la destination originale est laissée à `Any` au lieu de `Internet`, les flux d'administration (SSH/HTTPS) seront eux aussi traduits et interprétés comme une tentative d'intrusion, puis bloqués.
+Tester un flux autorisé et un flux interdit depuis chaque zone pertinente. Examiner la politique active, les compteurs, les traces et les routes. Comparer les adresses avant et après traduction plutôt que d'attribuer systématiquement un blocage à l'IPS.
 
-## Bonnes pratiques de sécurité
+Les affectations réelles figurent dans les [tables de routage](../../ressources/tables-de-routage.md) et la [table NAT](../../ressources/table-nat.md).
 
-- Segmenter les réseaux (VLAN Production / Clients / Administration)
-- Appliquer le filtrage au niveau applicatif (UTM)
-- Utiliser des numéros de port source aléatoires pour complexifier les attaques
-- Respecter les recommandations de l'**ANSSI**
+## Situations associées
 
-## Voir aussi
+- [Situation 1 : Phase d'analyse préalable](../../situations/bloc3-cyber/situation1.md)
+- [Situation 2 : Premiers paramétrages d'un pare-feu sur un site de l'entreprise](../../situations/bloc3-cyber/situation2.md)
+- [Situation 3 : Routage et NAT](../../situations/bloc3-cyber/situation3.md)
 
-- [Documents liés à la situation Cyber](../../situations/bloc3-cyber/situation1.md)
-- [Cisco](../reseau/cisco.md)
+## Sources officielles
+
+- [Stormshield — configuration du filtrage et du NAT](https://documentation.stormshield.eu/SNS/v4/en/Content/Installation_and_first_time_configuration/Securitypolicy_filteringnat.htm)

@@ -1,67 +1,48 @@
-# Supervision
+# Supervision, journaux et rsyslog
 
-Documentation générique de la **supervision** des systèmes et services, utilisée dans le contexte CUB pour surveiller l'infrastructure (réseau, serveurs, disponibilité des services).
+## Rôle et fonctionnement
 
-## Principe
+La supervision mesure la disponibilité et les performances, puis déclenche des alertes. La journalisation enregistre les événements. Les deux se complètent : un service peut répondre tout en produisant des erreurs, et un fichier de journal peut exister sans être correctement alimenté.
 
-La supervision consiste à **collecter**, **analyser** et **alerter** sur l'état des équipements et services afin de détecter les dysfonctionnements au plus tôt.
+`journald` collecte les événements systemd ; rsyslog peut les traiter, écrire des fichiers et transmettre des messages à un collecteur. Installer rsyslog ne configure pas automatiquement une centralisation distante.
 
-## Outils courants
-
-| Type d'outil | Exemple | Rôle |
-|--------------|---------|------|
-| Supervision réseau | Zabbix, Nagios | Surveillance globale des équipements |
-| Analyse de trafic | tcpdump, Wireshark | Capture et analyse des paquets |
-| Journalisation | rsyslog | Centralisation des logs |
-
-## Supervision réseau (Zabbix)
-
-### Installation serveur (Debian)
+## Contrôle local
 
 ```bash
-sudo apt install zabbix-server-mysql zabbix-frontend-php
-sudo systemctl enable zabbix-server
-sudo systemctl start zabbix-server
+systemctl --failed
+sudo journalctl -u unbound -b --no-pager
+sudo systemctl status rsyslog
+sudo rsyslogd -N1
+logger -t recette-cub 'Test de journalisation CUB'
 ```
 
-### Ajout d'un agent
+`rsyslogd -N1` valide la configuration. Rechercher le message de test dans la destination définie par les règles ; le nom du fichier dépend de la distribution et des réglages.
 
-```bash
-sudo apt install zabbix-agent
-sudo systemctl enable zabbix-agent
-sudo systemctl start zabbix-agent
-```
+## Concevoir la collecte
 
-## Analyse de trafic avec tcpdump
+Définir les équipements émetteurs, le collecteur, le transport, la rétention et les accès. Prévoir la rotation et l'espace disque. Une collecte distante sur un réseau non maîtrisé nécessite une protection appropriée, par exemple TLS, et une authentification du collecteur.
 
-```bash
-# Capturer les paquets d'une interface
-sudo tcpdump -i ens18
+Zabbix ou Nagios peuvent superviser des services, mais leur déploiement complet exige une configuration propre, éventuellement une base de données et un serveur Web. Leur seule installation ne suffit pas à créer une supervision opérationnelle.
 
-# Filtrer par port
-sudo tcpdump -i ens18 port 53
+## Recette et dépannage
 
-# Filtrer par hôte
-sudo tcpdump -i ens18 host 192.168.3.126
-```
+| Contrôle | Attendu |
+|---|---|
+| Service arrêté volontairement en maquette | Alerte reçue |
+| Service rétabli | Retour à l'état normal |
+| Message de test | Présent sur le collecteur |
+| Horodatage | Cohérent avec les autres équipements |
+| Rotation | Espace disque maîtrisé |
 
-## Centralisation des journaux (rsyslog)
+En cas d'absence d'événements, vérifier émission, filtrage, transport, règles du collecteur et permissions de destination. Utiliser une [capture ciblée](../reseau/protocoles-diagnostic.md) pour localiser la rupture.
 
-Les logs sont centralisés dans `/var/log` et gérés par **rsyslog** :
+## Situations associées
 
-```bash
-sudo systemctl status rsyslog.service
-ls -l /var/log
-```
+- [Activité 0 : Mise en place du contexte CUB](../../situations/bloc2-services/activite0.md)
+- [Activité 1 : Mise en place du service DNS résolveur (Unbound)](../../situations/bloc2-services/activite1-dns-resolveur.md)
+- [Feuille de route des chapitres](../../situations/bloc2-reseaux/feuille-de-route.md)
 
-## Bonnes pratiques
+## Sources officielles
 
-- Superviser la **disponibilité** et les **performances** des services critiques
-- Configurer des **alertes** (Seuils critiques)
-- **Centraliser** les journaux pour faciliter l'investigation
-- Vérifier régulièrement l'intégrité des sauvegardes
-
-## Voir aussi
-
-- [Linux](../adminsys/linux.md)
-- [Services Web](services-web.md)
+- [Debian — rsyslogd](https://manpages.debian.org/bookworm/rsyslog/rsyslogd.8.en.html)
+- [Debian — tcpdump](https://manpages.debian.org/bookworm/tcpdump/tcpdump.8.en.html)

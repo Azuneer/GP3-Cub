@@ -32,6 +32,16 @@ Productions concrètes de notre groupe pour chaque situation professionnelle du 
 
     [Situation 1 : Phase d'analyse préalable](bloc3-cyber/situation1.md)  
     [Situation 2 : Premiers paramétrages d'un pare-feu](bloc3-cyber/situation2.md)  
-    [Situation 3 : Routage et NAT](bloc3-cyber/situation3.md)
+    [Situation 3 : Routage et NAT](bloc3-cyber/situation3.md)  
+    [Situation 4 : Déploiement et sécurisation d’un bastion — en cours](bloc3-cyber/situation4.md)
+
+
+- :material-file-document-multiple:{ .lg .middle } __Toutes les productions du vault__
+
+    ---
+
+    Fiches, annexes, documents techniques et brouillons en cours.
+
+    [Consulter les productions](../ressources/productions.md)
 
 </div>

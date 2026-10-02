@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Claude">
   <diagram id="physique-gp3" name="Schema physique - GP3">
-    <mxGraphModel dx="1118" dy="832" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="547" dy="384" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -107,6 +107,17 @@
         </mxCell>
         <mxCell id="vm2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=8;" value="VM&#xa;(Linux)" vertex="1">
           <mxGeometry height="58" width="98" x="1325" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="L0XwllYSv4oqoyXUy2vU-5" edge="1" parent="1" source="l2top" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=7;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.997;entryY=0.662;entryDx=0;entryDy=0;entryPerimeter=0;" target="l3" value="VLAN 51 BASTION">
+          <mxGeometry relative="1" x="-0.1105" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="990.03" y="388.51" />
+              <mxPoint x="990.03" y="672.41" />
+            </Array>
+            <mxPoint x="980" y="404" as="sourcePoint" />
+            <mxPoint x="980" y="664" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

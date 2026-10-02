@@ -80,7 +80,7 @@ Ici, nous définissons un nouveau nom, puis nous redémarrons le serveur dans la
 
 ### 6.1. Vérifier la synchronisation horaire
 
-#### 6.1.1. Vérifier si un serveur de temps "NTP" est actuellement utilisé par votre serveur Windows
+#### 6.1.1. Vérifier si un serveur de temps "NTP" est actuellement utilisé par le serveur Windows
 
 Un serveur NTP de Microsoft était actuellement utilisé par le serveur. Il nous faut donc le changer.
 
@@ -302,3 +302,12 @@ ssh Administrateur@172.16.53.1
 > Dans un contexte de production, cette empreinte devrait toujours être comparée avec celle générée réellement par le serveur avant suppression, afin d'écarter tout risque d'attaque de type Man-in-the-Middle.
 
 La connexion établie, nous disposons désormais d'un accès distant sécurisé au serveur, sans dépendre de la console graphique Proxmox pour les opérations d'administration courantes.
+
+## Documentation technique associée
+
+- [Virtualisation : Proxmox, VirtualBox et VirtIO](../../documentation/adminsys/virtualisation.md)
+- [Windows Server : préparation, SConfig et Sysprep](../../documentation/adminsys/windows.md)
+- [PowerShell : commandes, comptes et scripts](../../documentation/adminsys/powershell.md)
+- [SSH, SCP et RDP](../../documentation/adminsys/ssh-rdp.md)
+- [Active Directory, DNS et comptes](../../documentation/adminsys/active-directory.md)
+- [NTP : synchronisation horaire et fuseaux](../../documentation/services/ntp.md)

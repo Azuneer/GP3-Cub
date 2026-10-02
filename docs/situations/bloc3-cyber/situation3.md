@@ -2,18 +2,14 @@
 
 ![Logo CUB](../../assets/logo_cub.png){ width="150" }
 
-> :bust_in_silhouette: **Fiche rédigée par** : GADONNAUD Ewen  
-> :mortar_board: **Formation** : BTS SIO 2ème année - Option SISR  
-> :school: **Établissement** : Lycée Paul-Louis Courier, Tours  
-> :calendar: **Date** : Septembre 2026
-
-![Schéma du contexte CUB](../../assets/situations/bloc3-cyber/schema-reseau.png)
+> :bust_in_silhouette: Fiche rédigée par : GADONNAUD Ewen
+> :mortar_board: Formation : BTS SIO 2ème année - Option SISR
+> :school: Établissement : Lycée Paul-Louis Courier, Tours
+> :calendar: Date : Septembre 2026
 
 ---
 
-## 1. Rédiger la table de routage du pare-feu Stormshield de votre agence
-
-La table de routage du pare-feu Stormshield de notre agence, reprise également dans la section [Ressources > Schémas](../../ressources/schemas.md), est la suivante :
+## 1. Rédiger la table de routage du pare-feu Stormshield de l’agence
 
 | Destination    | Masque          | Passerelle     | Interface (de sortie) | Type |
 | -------------- | --------------- | -------------- | --------------------- | ---- |
@@ -23,93 +19,75 @@ La table de routage du pare-feu Stormshield de notre agence, reprise également 
 | 192.168.3.0    | 255.255.255.0   | 192.168.33.253 | 192.168.33.254        | S    |
 | 0.0.0.0        | 0.0.0.0         | 192.36.253.254 | 192.36.253.30         | S*   |
 
-- **Type C** : route connectée (interface directement rattachée au sous-réseau)
-- **Type S** : route statuelle
-- **Type S*** : route par défaut
-
-La route par défaut (`0.0.0.0/0`) redirige tout le trafic destiné à Internet vers le pare-feu professionnel (`192.36.253.254`) via la sortie WAN (`192.36.253.30`).
-
 ## 2. Déterminer quelle adresse IP du WAN doit servir de passerelle pour aller sur internet ? Puis créer un objet réseau afin que cette adresse IP soit représentée dans l'interface d'administration
 
-L'interface WAN (OUT) du pare-feu de notre agence utilise l'adresse `192.36.253.30/24`. La passerelle pour accéder à Internet est l'adresse du pare-feu professionnel : `192.36.253.254`.
+L'interface WAN (out) doit utiliser l'adresse IP 192.36.253.254/24 qui corresponds à au pare feu prof. Nous créons un objet Machine avec cette adresse IP dans l'onglet Objets -> Réseau 
 
-Nous créons un objet réseau dans l'interface d'administration Stormshield (onglet **Objets > Réseau**) afin de pouvoir référencer cette adresse de façon exploitable dans les règles de routage et de filtrage.
+![2. Déterminer quelle adresse IP du WAN doit servir de passerelle pour aller sur internet ? Puis créer un objet réseau afin que cette adresse IP soit représentée dans l'interface d'administration](../../assets/situations/bloc3-cyber/objet-reseau-wan.png)
 
-![Création de l'objet réseau WAN](../../assets/situations/bloc3-cyber/objet-reseau-wan.png)
+## 3. Utiliser cet objet afin de pouvoir implémenter la table de routage sur le pare-feu 
 
-## 3. Utiliser cet objet afin de pouvoir implémenter la table de routage sur votre pare-feu
+L'objet créé précédemment sera utilisé comme route par défaut pour notre pare feu, afin d'envoyer les paquets entrants vers le pare feu des profs et donc, sur internet. Pour se faire, nous nous rendons dans l'onglet Réseau -> Routage, ou nous pouvons configurer la route par défaut et notre route résumée pour le réseau privé LAN.
 
-L'objet créé précédemment est utilisé comme passerelle de la route par défaut pour notre pare-feu : tous les paquets destinés à Internet sont envoyés vers le pare-feu professionnel (`192.36.253.254`) via notre interface WAN.
+Un objet "RéseauLANResume" est créé au préalable pour cibler tout notre LAN
 
-Nous nous rendons dans l'onglet **Réseau > Routage** pour configurer la route par défaut et la route résumée pour le réseau privé LAN.
+![3. Utiliser cet objet afin de pouvoir implémenter la table de routage sur le pare-feu ](../../assets/situations/bloc3-cyber/routage-reseau.png)
 
-Un objet « RéseauLANResume » a été créé au préalable afin de cibler l'ensemble de notre réseau interne (`192.168.3.0/24`).
+## 4. Proposer et paramétrer une solution technique permettant aux adresses IP privées du site de pouvoir communiquer sur le réseau WAN public et internet. 
 
-![Configuration du routage](../../assets/situations/bloc3-cyber/routage-reseau.png)
+Une solution technique afin que nos adresses IP privées de notre réseau LAN puisse communiquer sur internet est la mise en place de NAT avec surcharge. Voici le tableau résumant les règles de NAT à instaurer sur le pare feu : 
 
-## 4. Proposer et paramétrer une solution technique permettant aux adresses IP privées de votre site de pouvoir communiquer sur le réseau WAN public et Internet
+| **IP Src**        | **Port Src** | **IP Dst**     | **Port Dst** | **IP Src**    | **Port Src**         | **IP Dst**     | **Port Dst** |
+| ----------------- | ------------ | -------------- | ------------ | ------------- | -------------------- | -------------- | ------------ |
+| 192.168.3.0/24    | Any          | Any (Internet) | Any          | 192.36.253.30 | Dynamique (éphémère) | Any (Internet) | Any          |
+| 192.168.33.248/29 | Any          | Any            | Any          | 192.36.253.30 | Dynamique            | Any            | Any          |
+Afin de paramétrer le NAT, nous nous rendons dans l'onglet Politique de sécurité -> Filtrage et NAT : 
 
-La solution retenue est le **NAT avec surcharge** (MASQUERADING), qui permet à toutes les adresses privées du LAN d'êtrenatteindre depuis Internet en se cachant derrière l'adresse publique de notre interface WAN.
+![4. Proposer et paramétrer une solution technique permettant aux adresses IP privées du site de pouvoir communiquer sur le réseau WAN public et internet. ](../../assets/situations/bloc3-cyber/nat-regles.png)
 
-Voici le tableau récapitulatif des règles de NAT à instaurer sur le pare-feu (reprises également dans les annexes de la [Situation 1](situation1.md)) :
+## 5. Peut-on joindre le pare-feu général CUB puis les serveurs présents dans sa DMZ. Proposer une analyse des résultats obtenus.
 
-| **IP Src**        | **Port Src** | **IP Dst**     | **Port Dst** | **IP Src (NAT)** | **Port Src (NAT)**   | **IP Dst (NAT)** | **Port Dst (NAT)** |
-| ----------------- | ------------ | -------------- | ------------ | ---------------- | -------------------- | ---------------- | ------------------ |
-| 192.168.3.0/24    | Any          | Any (Internet) | Any          | 192.36.253.30    | Dynamique (éphémère) | Any (Internet)   | Any                |
-| 192.168.33.248/29 | Any          | Any            | Any          | 192.36.253.30    | Dynamique            | Any              | Any                |
+Nous essayons de ping depuis un poste présent dans le VLAN 10 Clients un serveur présent dans la DMZ de l'agence Hong Kong (Pare Feu prof) et un serveur présent dans la DMZ du pare feu du siège 
 
-Le paramétrage s'effectue dans l'onglet **Politique de sécurité > Filtrage et NAT** :
+* IP SRV DMZ HONG KONG : 192.36.8.10
+* IP SRV DMZ SIEGE :  192.36.250.11
 
-![Paramétrage NAT](../../assets/situations/bloc3-cyber/nat-regles.png)
+![5. Peut-on joindre le pare-feu général CUB puis les serveurs présents dans sa DMZ. Proposer une analyse des résultats obtenus.](../../assets/situations/bloc3-cyber/test-dmz-ping.png)
 
-## 5. Peut-on joindre le pare-feu général CUB puis les serveurs présents dans sa DMZ ? Proposer une analyse des résultats obtenus
+Nous arrivons à ping les deux serveurs, l'analyse est la suivante : 
 
-Nous réalisons un test de ping depuis un poste du VLAN 10 (Clients) vers deux serveurs :
+Etant donné que notre réseau LAN est NATé, nos paquets en direction d'internet (ici, vers les différents serveurs DMZ) obtiennent l'IP source de notre patte OUT du Pare Feu de notre agence. Ainsi, nous arrivons à communiquer avec les serveurs dans les différentes DMZ car ce sont des adresses publiques.
 
-* **DMZ Hong Kong** (pare-feu professionnel) : `192.36.8.10`
-* **DMZ Siège** (pare-feu du siège) : `192.36.250.11`
+## 6. Proposer et paramétrer une solution technique permettant aux services WEB et FTP de la DMZ d'être interrogé par le réseau WAN. 
 
-![Test ping vers DMZ](../../assets/situations/bloc3-cyber/test-dmz-ping.png)
+Il suffit de ne pas utiliser de NAT pour le réseau DMZ et d'assigner à chaque serveur une adresse publique.
 
-Les deux pings aboutissent. **Analyse** :
+## 7. Réaliser une recette permettant de valider les objectifs de cette situation.
 
-Les paquets émis depuis notre LAN sont NATés (transformés avec l'adresse source `192.36.253.30`) lors du passage par notre pare-feu Stormshield. C'est cette adresse publique que voient les serveurs DMZ en réponse. Comme ces serveurs sont directement joignables depuis Internet, la communication fonctionne grâce à la surcharge NAT configurée en question 4.
+Dans l'ordre : 
 
-## 6. Proposer et paramétrer une solution technique permettant aux services WEB et FTP de votre DMZ d'être interrogés par le réseau WAN
+* Etablir la connexion de l'agence à Internet
+* Assurer la communication entre le réseau interne et le réseau public
+* Rendre le service Web accessible depuis Internet
+* Contrôler et sécuriser les flux entrants et sortants
 
-Afin que les services hébergés dans notre DMZ soient joignables depuis Internet, il ne faut pas appliquer de NAT sur le trafic entrant vers la DMZ. Chaque serveur public doit disposer d'une **adresse publique dédiée** (ou une traduction NAT statique dans le cas d'un routage avec adresse privée, mais ici les serveurs DMZ ont des adresses publiques).
+Premièrement, la connexion de l'agence à Internet fonctionne, essayons d'aller sur google depuis un ordinateur présent dans le VLAN Client : 
 
-Le pare-feu laisse ainsi entrer les flux WAN vers la DMZ sans remapping d'adresse, en s'appuyant sur la table de routage et les règles de filtrage pour ne autoriser que les services exposés (HTTP, HTTPS, FTP) tout en bloquant le reste.
+![7. Réaliser une recette permettant de valider les objectifs de cette situation.](../../assets/situations/bloc3-cyber/internet-access.png)
 
-## 7. Réaliser une recette permettant de valider les objectifs de cette situation
+Après, nous vérifions que la communication inter réseau (privé et public) fonctionne, pour se faire, il faut ping un ordinateur présent dans la DMZ depuis un poste dans le LAN.
 
-La recette de validation suit quatre étapes :
+![7. Réaliser une recette permettant de valider les objectifs de cette situation.](../../assets/situations/bloc3-cyber/comm-priv-pub.png)
 
-### Étape 1 — Connectivité Internet
+Ensuite, nous demandons à une agence voisine de ping un serveur présent dans notre DMZ à l'adresse 192.36.3.1 depuis un poste présent dans leur VLAN Administration : 
 
-La connexion de l'agence à Internet fonctionne. Nous vérifions en accédant à Google depuis un poste du VLAN Client :
+![7. Réaliser une recette permettant de valider les objectifs de cette situation.](../../assets/situations/bloc3-cyber/ping-dmz-externe.jpg)
 
-![Accès Internet depuis le VLAN Client](../../assets/situations/bloc3-cyber/internet-access.png)
+## Documentation technique associée
 
-### Étape 2 — Communication inter-réseau (LAN ↔ DMZ)
-
-Nous vérifions que la communication entre le réseau interne et les serveurs DMZ fonctionne, en pingant un serveur situé dans la DMZ depuis un poste du LAN :
-
-![Communication LAN vers DMZ](../../assets/situations/bloc3-cyber/comm-priv-pub.png)
-
-### Étape 3 — Atteignabilité de la DMZ depuis l'extérieur
-
-Nous demandons à une agence voisine (VLAN Administration, pare-feu professionnel) de ping notre serveur DMZ à l'adresse `192.36.3.1` :
-
-![Ping externe vers la DMZ](../../assets/situations/bloc3-cyber/ping-dmz-externe.jpg)
-
-Le ping externe aboutit, confirmant que la DMZ est bien accessible depuis le réseau WAN public.
-
-### Étape 4 — Résumé des résultats
-
-| Objectif | Résultat |
-| --- | --- |
-| Connectivité Internet depuis le LAN | ✅ |
-| Communication LAN ↔ DMZ | ✅ |
-| DMZ accessible depuis le WAN | ✅ |
-| Filtrage et NAT cohérents avec la table | ✅ |
+- [Cisco IOS : VLAN, SVI et routes](../../documentation/reseau/cisco.md)
+- [NAT, PAT et publication de services](../../documentation/reseau/nat.md)
+- [TCP, UDP, ICMP et diagnostic réseau](../../documentation/reseau/protocoles-diagnostic.md)
+- [Stormshield : UTM, zones et politiques de sécurité](../../documentation/cybersecurite/stormshield.md)
+- [Services Web : Apache, HTTP et publication en DMZ](../../documentation/services/services-web.md)
+- [FTP, FTPS et SFTP](../../documentation/services/ftp.md)

@@ -1,0 +1,113 @@
+<mxfile host="Electron" agent="Claude">
+  <diagram id="logique-gp3" name="Schema logique - GP3">
+    <mxGraphModel dx="562" dy="394" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;" value="Schema logique - GP3&#xa;CUB" vertex="1">
+          <mxGeometry height="55" width="294" x="742" y="48" as="geometry" />
+        </mxCell>
+        <mxCell id="cart" parent="1" style="text;html=1;align=right;verticalAlign=middle;fontSize=10;" value="Derniere edition par Ewen le 05/09/2026." vertex="1">
+          <mxGeometry height="28" width="350" x="1280" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="vlan10" parent="1" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#000000;" value="VLAN 10 : Clients&#xa;192.168.3.128/26" vertex="1">
+          <mxGeometry height="83" width="258" x="117" y="159" as="geometry" />
+        </mxCell>
+        <mxCell id="vlan20" parent="1" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#000000;" value="VLAN 20 : Administration&#xa;192.168.3.192/28" vertex="1">
+          <mxGeometry height="83" width="258" x="117" y="306" as="geometry" />
+        </mxCell>
+        <mxCell id="vlan53" parent="1" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#000000;" value="VLAN 53 : Production&#xa;192.168.3.0/25" vertex="1">
+          <mxGeometry height="83" width="258" x="117" y="453" as="geometry" />
+        </mxCell>
+        <mxCell id="l3" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Routeur / Commutateur L3" vertex="1">
+          <mxGeometry height="147" width="147" x="522" y="422" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="vlan10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=10;" target="l3" value="192.168.3.190/26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="vlan20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=10;" target="l3" value="192.168.3.206/28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="vlan53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=10;" target="l3" value="192.168.3.126/25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="snsgp3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3864;fontColor=#ffffff;fontStyle=1;fontSize=13;" value="SNS-GP3" vertex="1">
+          <mxGeometry height="83" width="166" x="779" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="l3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;dashed=1;fontSize=10;" target="snsgp3" value="TRUNK&#xa;192.168.33.253/29 - 192.168.33.254/29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dmz" parent="1" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#000000;" value="DMZ EXTERNE 83&#xa;192.36.3.0/24" vertex="1">
+          <mxGeometry height="83" width="258" x="779" y="818" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="snsgp3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;dashed=1;fontSize=10;" target="dmz" value="VLAN TAG 83&#xa;192.36.3.254/24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wancub" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#000000;" value="Reseau WAN CUB&#xa;192.36.253.0/24" vertex="1">
+          <mxGeometry height="147" width="258" x="1074" y="229" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="snsgp3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=10;" target="wancub" value="192.36.253.30/24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="snsprof" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3864;fontColor=#ffffff;fontStyle=1;fontSize=13;" value="SNS-Prof" vertex="1">
+          <mxGeometry height="83" width="166" x="1386" y="229" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="wancub" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=10;" target="snsprof" value="192.36.253.254/24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="internet" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#000000;" value="INTERNET" vertex="1">
+          <mxGeometry height="129" width="184" x="1386" y="394" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="snsprof" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;startArrow=none;fontSize=10;" target="internet" value="172.16.31.250/22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legbox" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=13;align=left;spacingLeft=10;spacingTop=6;" value="LEGENDE" vertex="1">
+          <mxGeometry height="202" width="515" x="117" y="744" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=none;startArrow=none;fontSize=11;" value="Flux sans tag (ACCESS)">
+          <mxGeometry relative="1" y="18" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="144" y="803" as="sourcePoint" />
+            <mxPoint x="264" y="803" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg2" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=none;startArrow=none;dashed=1;fontSize=11;" value="Flux avec tag (TRUNK)">
+          <mxGeometry relative="1" y="9" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="144" y="836" as="sourcePoint" />
+            <mxPoint x="264" y="836" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3864;fontColor=#ffffff;fontSize=10;" value="Pare-feu" vertex="1">
+          <mxGeometry height="28" width="55" x="144" y="864" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3t" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="Pare-feu" vertex="1">
+          <mxGeometry height="28" width="138" x="209" y="864" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="" vertex="1">
+          <mxGeometry height="28" width="37" x="144" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4t" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="Routeur / commutateur L3" vertex="1">
+          <mxGeometry height="28" width="212" x="209" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="leg5" parent="1" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="28" width="55" x="430" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="leg5t" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="Reseau" vertex="1">
+          <mxGeometry height="28" width="92" x="494" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="TIbtkcZF2ZV_DJr1tfpe-2" edge="1" parent="1" source="TIbtkcZF2ZV_DJr1tfpe-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="l3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TIbtkcZF2ZV_DJr1tfpe-3" connectable="0" parent="TIbtkcZF2ZV_DJr1tfpe-2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="192.168.3.214/29" vertex="1">
+          <mxGeometry relative="1" x="-0.4412" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TIbtkcZF2ZV_DJr1tfpe-1" parent="1" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#000000;" value="VLAN 51 : Bastion&lt;div&gt;192.168.3.208/29&lt;/div&gt;" vertex="1">
+          <mxGeometry height="83" width="258" x="117" y="585" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

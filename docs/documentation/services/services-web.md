@@ -1,77 +1,57 @@
-# Services Web
+# Services Web : Apache, HTTP et publication en DMZ
 
-Documentation générique des **services web** (HTTP/HTTPS) utilisée dans le contexte CUB pour l'hébergement des sites vitrines de l'entreprise.
+## Rôle et fonctionnement
 
-## Environnement
+Un serveur HTTP répond aux requêtes d'un client Web. Apache peut héberger plusieurs sites avec des VirtualHost, sélectionnés notamment à partir du nom demandé. HTTPS ajoute TLS ; la publication depuis le WAN implique aussi le routage, le filtrage et éventuellement le NAT.
 
-Dans le contexte CUB, les serveurs web sont déployés sur **Debian (Apache)** et exposent les sites de l'entreprise sur l'ensemble des agences.
+## Exemple de site de maquette
 
-## Installation d'Apache sur Debian
+Sur Debian :
 
 ```bash
 sudo apt update
 sudo apt install apache2
-sudo systemctl enable apache2
-sudo systemctl start apache2
+sudo install -d -m 0755 /var/www/cub
 ```
 
-## Configuration d'un site virtuel (VirtualHost)
-
-Créer `/etc/apache2/sites-available/cubX.conf` :
+Créer un fichier `index.html` dans ce répertoire, puis définir un site dans `/etc/apache2/sites-available/cub.conf` :
 
 ```apache
 <VirtualHost *:80>
-    ServerName cubX.fr
-    ServerAlias www.cubX.fr
-
-    DocumentRoot /var/www/cubX
-
-    <Directory /var/www/cubX>
-        Options Indexes FollowSymLinks
-        AllowOverride All
+    ServerName cub.example.org
+    DocumentRoot /var/www/cub
+    <Directory /var/www/cub>
+        Options -Indexes
+        AllowOverride None
         Require all granted
     </Directory>
-
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
 
-Activer le site :
+Le nom est un exemple documentaire. Il doit correspondre au nom choisi dans la maquette et à sa résolution DNS.
 
 ```bash
-sudo a2ensite cubX.conf
+sudo a2ensite cub.conf
+sudo apache2ctl configtest
 sudo systemctl reload apache2
+curl -I -H 'Host: cub.example.org' http://127.0.0.1
 ```
 
-## HTTPS avec Let's Encrypt
+## HTTPS et exposition
 
-```bash
-sudo apt install certbot python3-certbot-apache
-sudo certbot --apache -d cubX.fr -d www.cubX.fr
-```
+Installer un certificat correspondant au nom d'accès et vérifier son renouvellement. L'obtention auprès d'une autorité publique exige de prouver le contrôle du domaine avec une méthode adaptée ; une simple adresse privée ou un nom fictif ne suffit pas.
 
-L'installation de Let's Encrypt active automatiquement le HTTPS et gère le renouvellement des certificats.
+Ne publier que les ports nécessaires. L'administration du serveur doit rester sur le chemin d'administration prévu, séparée du trafic des visiteurs.
 
-## Vérification
+## Vérification et dépannage
 
-```bash
-# Version du serveur
-apache2 -v
+Tester successivement depuis le serveur, depuis une zone interne autorisée, puis depuis le WAN. Contrôler le code HTTP, le bon VirtualHost, les journaux et le certificat. Une réponse HTTP 200 depuis le LAN ne valide pas encore la règle [NAT](../reseau/nat.md).
 
-# Statut du service
-sudo systemctl status apache2
+## Situations associées
 
-# Tester la réponse
-curl -I https://cubX.fr
-```
+- [Situation 3 : Routage et NAT](../../situations/bloc3-cyber/situation3.md)
 
-## Déploiement
+## Sources officielles
 
-Les fichiers du site sont déployés dans `/var/www/cubX` et les droits adaptés pour l'utilisateur du service.
-
-## Voir aussi
-
-- [Linux](../adminsys/linux.md)
-- [DNS](dns.md)
-- [Supervision](supervision.md)
+- [Apache — VirtualHost par nom](https://httpd.apache.org/docs/2.4/vhosts/name-based.html)
+- [IETF — TLS](https://www.rfc-editor.org/rfc/rfc8446)

@@ -2,44 +2,27 @@
 
 ![Logo CUB](../../assets/logo_cub.png){ width="150" }
 
-> :bust_in_silhouette: **Fiche rédigée par** : GADONNAUD Ewen & Rayan BOINA BOINA  
+> :bust_in_silhouette: **Fiche rédigée par** : GADONNAUD Ewen & Rayan BOINA BOINA
 > :mortar_board: **Formation** : BTS SIO 2ème année - Option SISR  
 > :school: **Établissement** : Lycée Paul-Louis Courier, Tours  
 > :calendar: **Date** : Septembre 2026
 
-![Contexte CUB](../../assets/situations/bloc2-services/contexte-cub.png)
-
 ---
-
 ## Étape 1. Conception de l'architecture DNS de l'entreprise
 
 ### a) Schéma logique incluant le fonctionnement du service DNS
 
 À partir du schéma logique initial, nous proposons une architecture DNS respectant les contraintes suivantes :
 
-- Une **continuité de service** pour le **DNS récursif**, hébergé dans le **VLAN Production** (serveurs `dns0` et `dns1`).
-- Une **continuité de service** pour le **DNS faisant autorité** sur le domaine `californie.cub.sioplc.fr`, hébergé dans la **DMZ** (serveurs de noms `ns0`, `ns1`).
+* Une **continuité de service** pour le **DNS récursif**, hébergé dans le **VLAN Production** (serveurs `dns0` et `dns1`).
+* Une **continuité de service** pour le **DNS faisant autorité** sur le domaine `californie.cub.sioplc.fr`, hébergé dans la **DMZ** (serveurs de noms `ns0`, `ns1`).
 
 > **Convention de nommage**
-> - Serveurs **faisant autorité** sur un domaine : `ns0`, `ns1`, `ns2` (ex : `ns0.gadonnaud.eu`).
-> - Serveurs **récursifs** : `dns0`, `dns1` (ex : `dns0.google.com`, `dns1.google.com`).
+> * Serveurs **faisant autorité** sur un domaine : `ns0`, `ns1`, `ns2` (ex : `ns0.gadonnaud.eu`).
+> * Serveurs **récursifs** : `dns0`, `dns1` (ex : `dns0.google.com`, `dns1.google.com`).
 
-```mermaid
-flowchart LR
-    Client[Poste client<br/>VLAN Clients] -->|requête DNS récursive| DNS0[dns0 : 192.168.3.10<br/>résolveur récursif Unbound<br/>VLAN Production]
-    Client -.continuité.-> DNS1[dns1 : 192.168.3.11<br/>résolveur récursif<br/>VLAN Production]
-
-    DNS0 -->|cas nominal| DNSR[Requête vers les root hints puis<br/>résolution récursive itérative]
-    DNS0 -.dégradation.-> DNS1
-
-    DNSR -->|interrogation du domaine californie.cub.sioplc.fr| NS0[ns0 : autorité<br/>VLAN DMZ]
-    DNSR -.secondaire.-> NS1[ns1 : autorité<br/>VLAN DMZ]
-
-    NS0 --> ZONE[Zone californie.cub.sioplc.fr]
-
-    style DNS0 fill:#e8f5e9
-    style DNS1 fill:#e8f5e9
-```
+**Schéma (voir sur le site GP3)** : un résolveur `dns0` (192.168.3.10) et `dns1` (192.168.3.11) dans le VLAN Production, un DNS autoritaire `ns0`/`ns1` pour `californie.cub.sioplc.fr` dans la DMZ :
+- Poste client (VLAN Clients) → requête récursive → `dns0` → (continuité `dns1`) → résolution récursive → serveurs racines → TLD `.fr` → autorité `ns0`/`ns1` (DMZ).
 
 ### b) Fonctionnement du service DNS, étape par étape
 
@@ -160,13 +143,11 @@ Fichier de configuration de notre résolveur :
 # Inclusion des fichiers de configuration supplémentaires
 include-toplevel: "/etc/unbound/unbound.conf.d/*.conf"
 
-
 server:
 
     # Interface d'écoute IPv4 sur le réseau
     interface: 192.168.3.10
     interface: 127.0.0.1
-
 
     # Quels réseaux ont le droit de se servir du serveur DNS récursif
     # Ne jamais laisser son serveur récursif ouvert à tous
@@ -178,10 +159,8 @@ server:
     access-control: 192.168.33.248/29 allow_snoop
     access-control: 127.0.0.0/8 allow_snoop
 
-
     # Fichier indiquant les serveurs DNS racines
     root-hints: "/var/lib/unbound/root.hints"
-
 
     # On cache la version de Unbound
     # et on augmente la sécurité
@@ -190,21 +169,17 @@ server:
     hide-identity: yes
     qname-minimisation: yes
 
-
     # On autorise l'IPv4
     do-ip4: yes
-
 
     # Domaine interne
     domain-insecure: "sio.lan."
     private-domain: "sio.lan."
 
-
     # Journalisation
     logfile: "/var/log/unbound.log"
     verbosity: 1
     log-queries: yes
-
 
 # Serveurs DNS faisant autorité pour sio.lan.
 # Cette section doit être en dehors de "server:"
@@ -217,14 +192,14 @@ stub-zone:
 
 Points clés de cette configuration :
 
-- **`interface`** : le résolveur écoute sur l'adresse du VLAN Production et en localhost.
-- **`access-control`** : seuls les réseaux autorisés (VLAN Production, réseau d'administration, loopback) peuvent utiliser le résolveur. Il n'est volontairement **pas ouvert** à l'ensemble d'Internet (résolveur ouvert = risque d'amplification DDoS).
-- **`root-hints`** : pointe vers le fichier des serveurs racines téléchargé précédemment.
-- **`hide-version` / `hide-identity`** : durcissement (ne pas divulguer la version du serveur).
-- **`qname-minimisation`** : préserve la confidentialité en minimisant le nom envoyé aux serveurs parents (RFC 7816).
-- **`domain-insecure` / `private-domain`** : le domaine interne `sio.lan.` est traité comme un domaine privé, sans validation DNSSEC en amont.
-- **`logfile` / `log-queries`** : journalisation des requêtes dans `/var/log/unbound.log`.
-- **`stub-zone`** : le domaine interne `sio.lan.` est délégué aux serveurs faisant autorité `172.16.20.10` et `172.16.20.11`.
+* **`interface`** : le résolveur écoute sur l'adresse du VLAN Production et en localhost.
+* **`access-control`** : seuls les réseaux autorisés (VLAN Production, réseau d'administration, loopback) peuvent utiliser le résolveur. Il n'est volontairement **pas ouvert** à l'ensemble d'Internet (résolveur ouvert = risque d'amplification DDoS).
+* **`root-hints`** : pointe vers le fichier des serveurs racines téléchargé précédemment.
+* **`hide-version` / `hide-identity`** : durcissement (ne pas divulguer la version du serveur).
+* **`qname-minimisation`** : préserve la confidentialité en minimisant le nom envoyé aux serveurs parents (RFC 7816).
+* **`domain-insecure` / `private-domain`** : le domaine interne `sio.lan.` est traité comme un domaine privé, sans validation DNSSEC en amont.
+* **`logfile` / `log-queries`** : journalisation des requêtes dans `/var/log/unbound.log`.
+* **`stub-zone`** : le domaine interne `sio.lan.` est délégué aux serveurs faisant autorité `172.16.20.10` et `172.16.20.11`.
 
 ## Recette de validation de la situation
 
@@ -317,8 +292,17 @@ Ce que renvoie le journal :
 
 | Test | Résultat attendu | Résultat constaté | Statut |
 | --- | --- | --- | --- |
-| Résolution récursive `google.fr` | `NOERROR` + enregistrement `A` | `172.217.20.35` | ✅ |
-| Requête sur un nom inexistant | `NXDOMAIN` | `NXDOMAIN` + SOA racine | ✅ |
-| Journalisation des requêtes | Entrées dans `/var/log/unbound.log` | `google.fr. A IN` / `8.8.8.8. A IN` | ✅ |
+| Résolution récursive `google.fr` | `NOERROR` + enregistrement `A` | `172.217.20.35` | :white_check_mark: |
+| Requête sur un nom inexistant | `NXDOMAIN` | `NXDOMAIN` + SOA racine | :white_check_mark: |
+| Journalisation des requêtes | Entrées dans `/var/log/unbound.log` | `google.fr. A IN` / `8.8.8.8. A IN` | :white_check_mark: |
 
 Le serveur DNS résolveur `dns0` (192.168.3.10) est **opérationnel** : il assure la résolution récursive des noms publics pour le VLAN Production, avec une continuité prévue par le second résolveur `dns1` (192.168.3.11) configuré dans la table DNS des clients.
+
+## Documentation technique associée
+
+- [Debian : réseau, paquets et services systemd](../../documentation/adminsys/linux.md)
+- [TCP, UDP, ICMP et diagnostic réseau](../../documentation/reseau/protocoles-diagnostic.md)
+- [AppArmor : confinement et diagnostic](../../documentation/cybersecurite/apparmor.md)
+- [DNS : résolution, autorité et enregistrements](../../documentation/services/dns.md)
+- [Unbound : résolveur récursif, cache et DNSSEC](../../documentation/services/unbound.md)
+- [Supervision, journaux et rsyslog](../../documentation/services/supervision.md)

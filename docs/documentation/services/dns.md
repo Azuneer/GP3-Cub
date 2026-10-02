@@ -1,73 +1,48 @@
-# DNS
+# DNS : résolution, autorité et enregistrements
 
-Documentation générique de configuration et de gestion des services **DNS** (Domain Name System), utilisée dans le contexte CUB pour la résolution des noms de domaine des agences.
+## Rôle et fonctionnement
 
-## Principe
+Un client interroge un résolveur pour obtenir les données associées à un nom. Un serveur faisant autorité publie les données de ses zones. Un résolveur récursif recherche la réponse et peut la conserver en cache pendant sa durée de validité.
 
-Le DNS traduit des **noms de domaine** en **adresses IP**. Une zone DNS décrit un domaine et ses enregistrements.
+Dans CUB, `dns0` et `dns1` désignent les résolveurs ; `ns0`, `ns1` et `ns2` désignent les serveurs faisant autorité selon la convention de la fiche. Ces rôles doivent être distingués même lorsqu'un logiciel sait remplir plusieurs fonctions.
 
-## Types d'enregistrements
+## Enregistrements
 
-| Type | Rôle | Exemple |
-|------|------|---------|
-| `A` | Adresse IPv4 d'un hôte | `www.cub.fr. A 192.36.253.30` |
-| `AAAA` | Adresse IPv6 | `www.cub.fr. AAAA fe80::1` |
-| `CNAME` | Alias d'un hôte | `doc CNAME www` |
-| `MX` | Serveur de messagerie | `cub.fr. MX 10 mail` |
-| `NS` | Serveur de noms | `cub.fr. NS ns1.cub.fr.` |
-| `PTR` | Résolution inverse | `30.253.36.192 PTR www` |
+| Type | Usage |
+|---|---|
+| A / AAAA | Adresse IPv4 / IPv6 |
+| CNAME | Alias vers un autre nom |
+| NS | Serveur faisant autorité pour une zone |
+| MX | Serveur de messagerie et priorité |
+| PTR | Résolution inverse |
+| SOA | Paramètres de la zone, numéro de série |
+| SRV | Localisation d'un service, notamment pour AD |
 
-## Mise en place sur Debian (BIND)
+## Outils et mise en œuvre
 
-### Installation
-
-```bash
-sudo apt update
-sudo apt install bind9
-```
-
-### Configuration d'une zone
-
-Fichier `/etc/bind/named.conf.local` :
-
-```bind
-zone "cubX.fr" {
-    type master;
-    file "/etc/bind/db.cubX.fr";
-};
-```
-
-Fichier de zone `/etc/bind/db.cubX.fr` :
-
-```bind
-$TTL 604800
-@   IN  SOA ns1.cubX.fr. admin.cubX.fr. (
-        2026090901 ; Serial
-        604800     ; Refresh
-        86400      ; Retry
-        2419200    ; Expire
-        604800 )   ; Negative Cache TTL
-;
-    IN  NS  ns1.cubX.fr.
-ns1 IN  A   <ip_dns>
-www IN  A   <ip_web>
-```
-
-### Activer et vérifier
+BIND peut publier des zones faisant autorité. Unbound est utilisé dans la situation pour la résolution récursive. Une zone interne peut être orientée vers les serveurs appropriés sans envoyer toutes les requêtes publiques vers eux.
 
 ```bash
-sudo systemctl restart bind9
-sudo named-checkzone cubX.fr /etc/bind/db.cubX.fr
-nslookup www.cubX.fr
-dig www.cubX.fr
+dig @192.168.3.10 example.org A
+dig @192.168.3.10 example.org AAAA
+dig @192.168.3.10 example.org +tcp
+dig @192.168.3.10 exemple-inexistant.invalid
 ```
 
-## Réseau serveurs Debian (DMZ)
+## Vérification et dépannage
 
-Dans l'architecture CUB, les serveurs **DNS maîtres et esclaves** sont déployés en **DMZ** pour assurer la résolution du domaine de chaque agence.
+`NOERROR` n'implique pas nécessairement une réponse contenant le type demandé. `NXDOMAIN` signifie que le nom n'existe pas ; `SERVFAIL` indique un échec de traitement ; `REFUSED` indique un refus.
 
-## Voir aussi
+Comparer le serveur interrogé, le temps de réponse et le TTL. Tester UDP et TCP 53. Une panne DNSSEC peut provenir de l'heure ou de la chaîne de validation : désactiver la validation sans diagnostic ne résout pas sa cause.
 
-- [Linux](../adminsys/linux.md)
-- [Services Web](services-web.md)
-- [Cisco](../reseau/cisco.md)
+La procédure de résolution utilisée par le projet figure dans [Unbound](unbound.md).
+
+## Situations associées
+
+- [Activité 0 : Mise en place du contexte CUB](../../situations/bloc2-services/activite0.md)
+- [Activité 1 : Mise en place du service DNS résolveur (Unbound)](../../situations/bloc2-services/activite1-dns-resolveur.md)
+
+## Sources officielles
+
+- [IETF — concepts DNS](https://www.rfc-editor.org/rfc/rfc1034)
+- [NLnet Labs — configuration Unbound](https://www.nlnetlabs.nl/documentation/unbound/unbound.conf/)

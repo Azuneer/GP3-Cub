@@ -54,10 +54,10 @@ Ce site compile produits de notre groupe : documentation technique, situations p
 
 Ce site est propulsé par [MkDocs Material](https://squidfunnel.github.io/mkdocs-material/). Pour contribuer :
 
-1. Forkez le dépôt
-2. Créez une branche (`git checkout -b feature/nom`)
-3. Modifiez les fichiers dans `docs/`
-4. Poussez et ouvrez une **Pull Request**
+1. Créer un fork du dépôt
+2. Créer une branche (`git checkout -b feature/nom`)
+3. Modifier les fichiers dans `docs/`
+4. Pousser les modifications et ouvrir une **Pull Request**
 
 ## Déploiement
 

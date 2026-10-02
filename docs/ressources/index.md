@@ -8,7 +8,7 @@ Base documentaire commune et transversale de l'infrastructure CUB : schémas, pl
 
     ---
 
-    Plans de câblage, schéma logique GP3 et maquette de l'architecture de référence (PDF).
+    Plans de câblage, schéma logique GP3 et maquette de l'architecture de référence (version actualisée).
 
     [:octicons-arrow-right-24: Voir les schémas](schemas.md)
 
@@ -24,17 +24,17 @@ Base documentaire commune et transversale de l'infrastructure CUB : schémas, pl
 
     ---
 
-    Traduction d'adresses du pare-feu Stormshield de l'agence (PDF).
+    Traduction d'adresses du pare-feu Stormshield de l'agence (version actualisée).
 
-    [:octicons-arrow-right-24: Télécharger](../assets/schemas/table-nat.pdf)
+    [Consulter la table NAT](table-nat.md)
 
 - :material-map-marker-distance:{ .lg .middle } __Tables de routage__
 
     ---
 
-    Tables de routage du switch layer 3 et du pare-feu Stormshield (PDF).
+    Tables de routage du switch layer 3 et du pare-feu Stormshield (version actualisée).
 
-    [:octicons-arrow-right-24: Télécharger](../assets/schemas/tables-de-routage.pdf)
+    [Consulter les tables de routage](tables-de-routage.md)
 
 - :material-file-pdf-box:{ .lg .middle } __Documentation technique__
 
@@ -43,5 +43,14 @@ Base documentaire commune et transversale de l'infrastructure CUB : schémas, pl
     Contenus généraux : administration système, cybersécurité, DevOps, réseau et services.
 
     [:octicons-arrow-right-24: Accéder](../documentation/index.md)
+
+
+- :material-file-document-multiple:{ .lg .middle } __Toutes les productions du vault__
+
+    ---
+
+    Fiches, annexes, documents techniques et brouillons en cours.
+
+    [Consulter les productions](productions.md)
 
 </div>
